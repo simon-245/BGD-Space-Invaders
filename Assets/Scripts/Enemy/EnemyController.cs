@@ -8,12 +8,20 @@ public class EnemyController : MonoBehaviour
 
     public float moveDistance = 1f;
     public float timeStep = 1f;
+    public float countdown;
 
     bool isMovingRight = true;
 
     // Use this for initialization
     void Start()
     {
+        countdown = timeStep;
+
+        if (countdown <= 0)
+        {
+            Move();
+            countdown = timeStep;
+        }
         // Invoke repeating will be called once after timeStep (2nd parameter) amount,
         // and then repeatedly every timeStep (3rd parameter) amount
         InvokeRepeating("Move", timeStep, timeStep);
@@ -22,7 +30,20 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        countdown -= Time.deltaTime;
+
+        if (countdown <= 0) {
+            Move();
+            countdown = timeStep;
+        }
+
+    }
+
+    void Foo()
+    {
+        Vector3 currentPos = transform.position;
+        Vector3 newPos = currentPos + new Vector3(moveDistance, 0f);
+        transform.position = newPos;
     }
 
     void Move()
