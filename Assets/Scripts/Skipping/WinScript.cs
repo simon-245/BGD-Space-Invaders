@@ -5,8 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class WinScript : MonoBehaviour
 {
-    
-    // Update is called once per frame
+    public AudioSource win;
+
+    void Start()
+    {
+        win = GetComponent<AudioSource>();
+        win.Play();
+    }
+
     public void PlayAgain()
     {
         SceneManager.LoadScene("SpaceInvaders");

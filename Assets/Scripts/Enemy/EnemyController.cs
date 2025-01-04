@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class EnemyController : MonoBehaviour
 {
@@ -7,72 +9,90 @@ public class EnemyController : MonoBehaviour
     public float maxPosX;
 
     public float moveDistance = 1f;
-    public float timeStep = 1f;
-    public float countdown;
+    public float moveForward = -1f;
 
     bool isMovingRight = true;
 
-    // Use this for initialization
+    public float timeStep = 1f;
+    public float countdown;
+
+    // I added a switch to try both methods
+    public bool isUsingCountdown = true;
+
     void Start()
     {
-        countdown = timeStep;
-
-        if (countdown <= 0)
+        if (isUsingCountdown)
         {
-            Move();
             countdown = timeStep;
         }
-        // Invoke repeating will be called once after timeStep (2nd parameter) amount,
-        // and then repeatedly every timeStep (3rd parameter) amount
-        InvokeRepeating("Move", timeStep, timeStep);
+        else
+        {
+            // Invoke repeating will be called once after timeStep (2nd parameter) amount,
+            // and then repeatedly every timeStep (3rd parameter) amount
+            InvokeRepeating("Move", timeStep, timeStep);
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        countdown -= Time.deltaTime;
+        if (isUsingCountdown)
+        {
+            countdown -= Time.deltaTime;
 
-        if (countdown <= 0) {
-            Move();
-            countdown = timeStep;
+            if (countdown <= 0)
+            {
+                Move();
+                countdown = timeStep;
+            }
         }
-
-    }
-
-    void Foo()
-    {
-        Vector3 currentPos = transform.position;
-        Vector3 newPos = currentPos + new Vector3(moveDistance, 0f);
-        transform.position = newPos;
     }
 
     void Move()
     {
         if (isMovingRight)
-        {
-            // Moving right
+        {            
             Vector3 currentPos = transform.position;
             Vector3 newPos = currentPos + new Vector3(moveDistance, 0f);
-            transform.position = newPos;
 
-            // If aliens group reached the right-most edge, flip their direction
-            if (transform.position.x >= maxPosX)
+            if (newPos.x >= maxPosX)
             {
                 isMovingRight = false;
+                MoveStepForward();
+            }
+ 
+            else
+            {
+                transform.position = newPos;
             }
         }
         else
         {
-            // Moving left
+            
             Vector3 currentPos = transform.position;
             Vector3 newPos = currentPos - new Vector3(moveDistance, 0f);
-            transform.position = newPos;
 
-            // If aliens group reached the left-most edge, flip their direction
-            if (transform.position.x <= minPosX)
+            if (newPos.x <= minPosX)
             {
                 isMovingRight = true;
+                MoveStepForward();
             }
+
+            else
+            {
+                transform.position = newPos;
+            }
+        }
+    }
+
+    void MoveStepForward()
+    {
+        Vector3 currentY = transform.position;
+        Vector3 newY = currentY + new Vector3(0f, moveForward);
+        transform.position = newY;
+
+        if (transform.position.y <= -4)
+        {
+            SceneManager.LoadScene("LoseScene");
         }
     }
 }

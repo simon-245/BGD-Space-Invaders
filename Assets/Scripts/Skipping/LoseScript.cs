@@ -5,8 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class LoseScript : MonoBehaviour
 {
+    public AudioSource gover;
+ 
+    void Start()
+    {
+        gover = GetComponent<AudioSource>();
+        gover.Play();
+    }
 
-    // Update is called once per frame
     public void PlayAgain()
     {
         SceneManager.LoadScene("SpaceInvaders");
