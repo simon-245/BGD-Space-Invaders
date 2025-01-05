@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -27,5 +28,10 @@ public class ScoreManager : MonoBehaviour
     {
         score += v;
         scoreText.text = score.ToString() + " POINTS";
+
+        if (score == 270)
+        {
+            SceneManager.LoadScene("WinScene");
+        }
     }
 }
